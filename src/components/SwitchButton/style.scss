@@ -1,0 +1,28 @@
+$button-color: rgb(94, 74, 227);
+
+.switch-button {
+  padding: 5px 20px;
+  border-radius: 1.5rem;
+  border: 1px solid $button-color;
+  color: $button-color;
+  background: white;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &--activated {
+    background: $button-color;
+    color: white;
+  }
+
+  &__title {
+    margin-right: 5px;
+  }
+
+  span {
+    margin-left: 5px;
+  }
+}
