@@ -1,12 +1,9 @@
 import React from 'react'
-import SwitchButton from "./components/SwitchButton";
+import Container from "./components/Container"
 
 const App = () => {
     return (
-        <div>
-            <h1>App</h1>
-            <SwitchButton title={'Switch'}/>
-        </div>
+        <Container/>
     )
 }
 
