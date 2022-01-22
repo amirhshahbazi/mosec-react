@@ -1,9 +1,9 @@
 import React, {Component} from "react"
 import SwitchButton from "../SwitchButton"
 import issuesApi from "../../service/issuesApi"
+import IssueList from "../IssueList"
+import ScrollAnchor from "../ScrollAnchor"
 import './style.scss'
-import IssueList from "../IssueList";
-import ScrollAnchor from "../ScrollAnchor";
 
 class Container extends Component {
     state = {
@@ -13,7 +13,6 @@ class Container extends Component {
         data: [],
         ended: false,
         type: 'replace',
-        isLoading: false,
     }
 
     constructor(props) {
@@ -29,10 +28,6 @@ class Container extends Component {
     }
 
     getIssues = async (type) => {
-        this.setState({
-            isLoading: true,
-        })
-
         const state = this.determineState()
         const {sort, page} = this.state
 
@@ -47,10 +42,6 @@ class Container extends Component {
         } else {
             this.setState({data: [...this.state.data, ...data]})
         }
-
-        this.setState({
-            isLoading: false,
-        })
     }
 
     determineState = () => {
@@ -70,12 +61,16 @@ class Container extends Component {
         if (!this.state.states.includes(buttonName)) {
             this.setState({
                 states: [...this.state.states, buttonName],
-                type: 'replace'
+                type: 'replace',
+                page: 1,
+                ended: false,
             })
         } else {
             this.setState({
                 states: this.state.states.filter(state => state !== buttonName),
-                type: 'replace'
+                type: 'replace',
+                page: 1,
+                ended: false,
             })
         }
     }
