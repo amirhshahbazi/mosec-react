@@ -2,34 +2,41 @@ import React, {Component} from "react"
 import SwitchButton from "../SwitchButton"
 import issuesApi from "../../service/issuesApi"
 import './style.scss'
+import IssueList from "../IssueList";
+import ScrollAnchor from "../ScrollAnchor";
 
 class Container extends Component {
     state = {
         states: [],
-        page: 1,
+        page: 0,
         sort: 'created',
+        data: [],
+        isLoading: false,
+        ended: false,
     }
 
     constructor(props) {
         super(props)
     }
 
-    componentDidMount() {
-        this.getIssues()
-    }
-
     componentDidUpdate(prevProps, prevState, snapshot) {
-        this.getIssues()
+        if (prevState.states !== this.state.states && !this.state.ended) {
+            this.getIssues()
+        }
     }
 
     getIssues = async () => {
         const state = this.determineState()
-        const {page, sort} = this.state
-        const results = await issuesApi.fetchIssues({
-            state,
-            page,
-            sort,
-        })
+        const {sort} = this.state
+        let {page} = this.state
+
+        page++
+        this.setState({isLoading: true})
+        const {data} = await issuesApi.fetchIssues({state, page, sort})
+        if (data.length === 0) {
+            this.setState({ended: true})
+        }
+        this.setState({data, isLoading: false})
     }
 
     determineState = () => {
@@ -55,6 +62,11 @@ class Container extends Component {
                 states: this.state.states.filter(state => state !== buttonName)
             })
         }
+        this.setState({
+            page: 0,
+            ended: false,
+            data: [],
+        })
     }
 
     render() {
@@ -65,6 +77,8 @@ class Container extends Component {
                     <SwitchButton stateChanged={this.showState} title={`closed`}/>
                 </header>
                 <main className={`container__body`}>
+                    <IssueList issues={this.state.data}/>
+                    <ScrollAnchor onIntersect={this.getIssues}/>
                 </main>
             </div>
         )

@@ -1,0 +1,32 @@
+.issue {
+  display: flex;
+  margin-bottom: 1.2rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid red;
+  &:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+  .issue-item {
+    &__title {
+      font-size: 1.1rem;
+      font-weight: 400;
+      margin-bottom: 0.5rem;
+    }
+    &__reporter {
+      font-size: 0.9rem;
+      color: #999;
+    }
+  }
+  .issue-icon {
+    margin-right: 5px;
+    margin-top: 2px;
+    &--open {
+      color: red;
+    }
+    &--closed {
+      color: red;
+    }
+  }
+}
