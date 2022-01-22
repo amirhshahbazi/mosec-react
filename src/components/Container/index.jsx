@@ -11,8 +11,9 @@ class Container extends Component {
         page: 0,
         sort: 'created',
         data: [],
-        isLoading: false,
         ended: false,
+        type: 'replace',
+        isLoading: false,
     }
 
     constructor(props) {
@@ -21,29 +22,35 @@ class Container extends Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if ((prevState.states !== this.state.states && !this.state.ended)) {
-            this.setState({
-                page: 0,
-                data: [],
-            }, () => {
-                this.getIssues()
-            })
+            this.getIssues('replace')
         } else if ((prevState.page !== this.state.page && !this.state.ended)) {
-            this.getIssues()
+            this.getIssues('extend')
         }
     }
 
-    getIssues = async () => {
+    getIssues = async (type) => {
+        this.setState({
+            isLoading: true,
+        })
+
         const state = this.determineState()
         const {sort, page} = this.state
 
-        this.setState({isLoading: true})
         const {data} = await issuesApi.fetchIssues({state, page, sort})
 
         if (data.length === 0) {
             this.setState({ended: true})
         }
 
-        this.setState({data: data, isLoading: false})
+        if (type === 'replace') {
+            this.setState({data})
+        } else {
+            this.setState({data: [...this.state.data, ...data]})
+        }
+
+        this.setState({
+            isLoading: false,
+        })
     }
 
     determineState = () => {
@@ -63,17 +70,19 @@ class Container extends Component {
         if (!this.state.states.includes(buttonName)) {
             this.setState({
                 states: [...this.state.states, buttonName],
+                type: 'replace'
             })
         } else {
             this.setState({
                 states: this.state.states.filter(state => state !== buttonName),
+                type: 'replace'
             })
         }
     }
 
     updatePage = () => {
         let {page} = this.state
-        this.setState({page: page + 1})
+        this.setState({page: page + 1, type: 'extend'})
     }
 
     render() {
