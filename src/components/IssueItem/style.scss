@@ -2,7 +2,7 @@
   display: flex;
   margin-bottom: 1.2rem;
   padding-bottom: 1.2rem;
-  border-bottom: 1px solid red;
+  border-bottom: 1px solid #999;;
   &:last-child {
     margin-bottom: 0;
     padding-bottom: 0;
@@ -23,10 +23,10 @@
     margin-right: 5px;
     margin-top: 2px;
     &--open {
-      color: red;
+      color: #999;
     }
     &--closed {
-      color: red;
+      color: #999;
     }
   }
 }

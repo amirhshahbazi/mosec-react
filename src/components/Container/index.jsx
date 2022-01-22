@@ -20,23 +20,30 @@ class Container extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevState.states !== this.state.states && !this.state.ended) {
+        if ((prevState.states !== this.state.states && !this.state.ended)) {
+            this.setState({
+                page: 0,
+                data: [],
+            }, () => {
+                this.getIssues()
+            })
+        } else if ((prevState.page !== this.state.page && !this.state.ended)) {
             this.getIssues()
         }
     }
 
     getIssues = async () => {
         const state = this.determineState()
-        const {sort} = this.state
-        let {page} = this.state
+        const {sort, page} = this.state
 
-        page++
         this.setState({isLoading: true})
         const {data} = await issuesApi.fetchIssues({state, page, sort})
+
         if (data.length === 0) {
             this.setState({ended: true})
         }
-        this.setState({data, isLoading: false})
+
+        this.setState({data: data, isLoading: false})
     }
 
     determineState = () => {
@@ -55,18 +62,18 @@ class Container extends Component {
     showState = (val, buttonName) => {
         if (!this.state.states.includes(buttonName)) {
             this.setState({
-                states: [...this.state.states, buttonName]
+                states: [...this.state.states, buttonName],
             })
-        } else if (this.state.states.includes(buttonName)) {
+        } else {
             this.setState({
-                states: this.state.states.filter(state => state !== buttonName)
+                states: this.state.states.filter(state => state !== buttonName),
             })
         }
-        this.setState({
-            page: 0,
-            ended: false,
-            data: [],
-        })
+    }
+
+    updatePage = () => {
+        let {page} = this.state
+        this.setState({page: page + 1})
     }
 
     render() {
@@ -78,7 +85,7 @@ class Container extends Component {
                 </header>
                 <main className={`container__body`}>
                     <IssueList issues={this.state.data}/>
-                    <ScrollAnchor onIntersect={this.getIssues}/>
+                    <ScrollAnchor onIntersect={this.updatePage}/>
                 </main>
             </div>
         )
