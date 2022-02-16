@@ -1,6 +1,8 @@
 <h1 align="center">
-  Mofid Securities technical assignment with React.js.
+  React.js technical assignment.
 </h1>
+
+<p align="center"> An assignment that I did during the interview process. </p>
 
 <p align="center">
  This is a project to fetch and show the issues of a Github repository. Instead of typical pagination, the app uses an infinite scroll behavior to load more issues. 
